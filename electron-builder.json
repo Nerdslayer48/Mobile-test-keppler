@@ -1,0 +1,21 @@
+{
+  "appId": "com.keppler.desktop",
+  "productName": "Keppler",
+  "directories": { "output": "release" },
+  "files": ["dist/**/*", "electron/**/*", "package.json"],
+  "asar": true,
+  "win": {
+    "target": ["nsis", "portable"]
+  },
+  "nsis": {
+    "artifactName": "${productName}-${version}-${arch}-nsis.${ext}",
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "deleteAppDataOnUninstall": false
+  },
+  "portable": {
+    "artifactName": "${productName}-${version}-${arch}-portable.${ext}"
+  }
+}

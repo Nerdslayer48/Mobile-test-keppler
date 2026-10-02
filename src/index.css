@@ -1,0 +1,120 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inder&family=Montserrat:wght@400;500;600;700&display=swap');
+
+
+@import "tailwindcss";
+
+:root {
+  /* BRAND */
+  --primary: #46d27a;
+  --secondary: #8ac19f;
+  --accent: #a5edc0;
+
+  /* BACKGROUNDS & SURFACES */
+  --background: #2c2c2c;
+  --surface: #333333;
+  --card: #3a3a3a;
+  --elevated: #424242;
+
+  /* BORDERS */
+  --border: #484848;
+  --border-strong: #555555;
+
+  /* TEXT */
+  --text-primary: #f5f5f5;
+  --text-secondary: #d6d6d6;
+  --text-tertiary: #b5b5b5;
+  --text-muted: #929292;
+  --text-disabled: #6f6f6f;
+
+  /* INPUTS */
+  --input-bg: #333333;
+  --input-border: #484848;
+  --input-text: #f5f5f5;
+  --input-placeholder: #929292;
+
+  /* BUTTONS */
+  --button-bg: #424242;
+  --button-text: #f5f5f5;
+  --button-border: #555555;
+  --button-hover: #4c4c4c;
+  --button-active: #585858;
+  --button-red: #F35A5A;
+
+  /* DIVIDERS */
+  --divider: #424242;
+  --divider-subtle: #383838;
+
+  /* SEMANTIC STATES */
+  --success: #4ade80;
+  --success-subtle: #203a29;
+
+  --warning: #fbbf24;
+  --warning-subtle: #3d3218;
+
+  --error: #f87171;
+  --error-subtle: #3d2222;
+}
+
+@theme {
+  /* BRAND */
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+
+  /* BACKGROUNDS & SURFACES */
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-card: var(--card);
+  --color-elevated: var(--elevated);
+
+  /* BORDERS */
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  /* TEXT */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-muted: var(--text-muted);
+  --color-text-disabled: var(--text-disabled);
+
+  /* INPUTS */
+  --color-input-bg: var(--input-bg);
+  --color-input-border: var(--input-border);
+  --color-input-text: var(--input-text);
+  --color-input-placeholder: var(--input-placeholder);
+
+  /* BUTTONS */
+  --color-button-bg: var(--button-bg);
+  --color-button-text: var(--button-text);
+  --color-button-border: var(--button-border);
+  --color-button-hover: var(--button-hover);
+  --color-button-active: var(--button-active);
+  --color-button-red: var(--button-red);
+
+  /* DIVIDERS */
+  --color-divider: var(--divider);
+  --color-divider-subtle: var(--divider-subtle);
+
+  /* SEMANTIC STATES */
+  --color-success: var(--success);
+  --color-success-subtle: var(--success-subtle);
+
+  --color-warning: var(--warning);
+  --color-warning-subtle: var(--warning-subtle);
+
+  --color-error: var(--error);
+  --color-error-subtle: var(--error-subtle);
+}
+
+body {
+  background-color: #2c2c2c
+    /* color: var(--color-zinc-100) */
+}
+
+
+@theme {
+  --font-montserrat: "Montserrat", sans-serif;
+  --font-inder: "Inder", sans-serif;
+}
