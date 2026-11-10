@@ -1,9 +1,12 @@
+import { companyId, loadCompanyData, saveCompanyData } from './companyAuth';
+
 export interface ProjectInput {
   name: string;
   categories: string[];
 }
 
 export interface ClientProject extends ProjectInput {
+  companyId: string;
   id: string;
   clientId: string;
 }
@@ -14,11 +17,12 @@ export function projectVariant(count: number) {
 
 export function loadProjects(clientId: string): ClientProject[] {
   try {
-    const saved: unknown = JSON.parse(localStorage.getItem(`keppler.projects.${clientId}`) ?? "[]");
+    const saved: unknown = loadCompanyData(`projects.${clientId}`, []);
     if (!Array.isArray(saved)) return [];
     return saved.filter((project): project is ClientProject =>
       project !== null && typeof project === "object" &&
       typeof project.id === "string" && project.clientId === clientId &&
+      project.companyId === companyId() &&
       typeof project.name === "string" && Array.isArray(project.categories) &&
       project.categories.length > 0 &&
       project.categories.every((category: unknown) => typeof category === "string")
@@ -28,8 +32,8 @@ export function loadProjects(clientId: string): ClientProject[] {
   }
 }
 
-export function saveProject(project: ClientProject): ClientProject[] {
-  const projects = [...loadProjects(project.clientId), project];
-  localStorage.setItem(`keppler.projects.${project.clientId}`, JSON.stringify(projects));
+export async function saveProject(project: Omit<ClientProject, "companyId">): Promise<ClientProject[]> {
+  const projects = [...loadProjects(project.clientId), { ...project, companyId: companyId() }];
+  await saveCompanyData(`projects.${project.clientId}`, projects);
   return projects;
 }

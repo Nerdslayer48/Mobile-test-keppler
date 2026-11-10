@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button } from "../00_UiComps/Button";
 import { Input } from "../00_UiComps/Input";
 import { NewCompany } from "./NewCompany";
+import { ClientPicturePicker } from "../00_UiComps/ClientPicturePicker";
 
 interface NewClientProps {
   open?: boolean;
@@ -91,11 +92,8 @@ export function NewClient({ open, onClose, onSave, initialValues, onDelete }: Ne
             
             </div>
 
-            <div>
-              <div className="bg-button-bg w-[210px] h-[210px] rounded-[6px] border-1 border-button-border">
-              </div>
-
-            </div>
+            <ClientPicturePicker value={draft.profilePicture} clientType={clientType}
+              onChange={profilePicture => setDraft(current => ({ ...current, profilePicture }))} />
           
           </div>
 

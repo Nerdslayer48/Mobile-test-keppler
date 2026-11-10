@@ -1,4 +1,5 @@
 export interface ClientInput {
+  profilePicture?: string;
   clientType: "individual" | "company";
   firstName: string;
   lastName: string;
@@ -11,6 +12,7 @@ export interface ClientInput {
   hotline: string;
 }
 export interface Client extends ClientInput {
+  companyId: string;
   id: string;
   name: string;
 }

@@ -1,16 +1,14 @@
 import { useState } from "react";
-import icon0 from "../../icons/cursor.png"; 
+import type { ReactNode } from "react";
+import { FiUpload, FiColumns } from "react-icons/fi";
+import { TbLayoutBoardSplit } from "react-icons/tb";
+import icon0 from "../../icons/cursor.png";
 import icon1 from "../../icons/square.png";
 import icon2 from "../../icons/circle.png";
 import icon4 from "../../icons/slash.png";
-import icon5 from "../../icons/text-box-edit.png"; 
-import icon6 from "../../icons/picture.png";
-import icon7 from "../../icons/play-alt.png";
-import icon8 from "../../icons/trash.png"; 
-import { Button } from "../00_UiComps/Button"
+import icon8 from "../../icons/trash.png";
 
-
-export type WorkspaceTool = 0 | 1 | 2 | 4;
+export type WorkspaceTool = 0 | 1 | 2 | 3 | 4;
 
 interface ToolBarProps {
   selectedTool?: WorkspaceTool;
@@ -18,39 +16,62 @@ interface ToolBarProps {
   onDeleteClick?: () => void;
   disabled?: boolean;
   canDelete?: boolean;
-  onTextClick?: () => void;
-  onImageClick?: () => void;
-  onVideoClick?: () => void;
+  onNewCardClick?: () => void;
+  onUploadMediaClick?: () => void;
 }
 
-export function ToolBar({ selectedTool: controlledTool, onToolChange, onDeleteClick, disabled = false, canDelete = true, onTextClick, onImageClick, onVideoClick }: ToolBarProps = {}) {
+interface ToolButtonProps {
+  label: string;
+  icon: ReactNode;
+  selected?: boolean;
+  disabled?: boolean;
+  flipped?: boolean;
+  onClick?: () => void;
+}
+
+function ToolButton({ label, icon, selected, disabled, flipped, onClick }: ToolButtonProps) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      aria-pressed={selected}
+      title={label}
+      disabled={disabled}
+      onClick={onClick}
+      className={`inline-flex h-10 w-12 shrink-0 items-center justify-center rounded-md border transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50 ${
+        selected
+          ? "border-primary bg-primary text-text-primary"
+          : "border-transparent bg-transparent text-button-text enabled:hover:border-button-border enabled:hover:bg-button-bg enabled:active:border-primary enabled:active:bg-primary"
+      }`}
+    >
+      {typeof icon === "string" ? <span
+        aria-hidden="true"
+        className={`block h-6 w-6 bg-current ${flipped ? "scale-x-[-1]" : ""}`}
+        style={{ mask: `url("${icon}") center / contain no-repeat`, WebkitMask: `url("${icon}") center / contain no-repeat` }}
+      /> : <span aria-hidden="true" className="flex h-6 w-6 items-center justify-center">{icon}</span>}
+    </button>
+  );
+}
+
+export function ToolBar({ selectedTool: controlledTool, onToolChange, onDeleteClick, disabled = false, canDelete = true, onNewCardClick, onUploadMediaClick }: ToolBarProps = {}) {
   const [internalTool, setInternalTool] = useState<WorkspaceTool>(0);
   const selectedTool = controlledTool ?? internalTool;
   const setSelectedTool = (tool: WorkspaceTool) => { setInternalTool(tool); onToolChange?.(tool); };
+
   return (
-    <div role="dialog" aria-label="Tool Bar" className="pointer-events-none fixed inset-0 z-50 flex mr-[24px] flex items-center justify-end">
-
-       <div className="pointer-events-auto bg-surface border-1 border-border flex flex-col p-[8px] rounded-[16px]">
-        <Button disabled={disabled} disableHover type="button" variant={selectedTool === 0 ? "primary" : "secondary"} onClick={() => setSelectedTool(0)} aria-pressed={selectedTool === 0} aria-label="Cursor" className="w-fit mb-[8px]"> <span aria-hidden="true" className="block bg-text-primary h-[32px] w-[32px] m-[2px] scale-x-[-1]" style={{ mask: `url("${icon0}") center / contain no-repeat`, WebkitMask: `url("${icon0}") center / contain no-repeat` }} /></Button>
-        <Button disabled={disabled} disableHover type="button" variant={selectedTool === 1 ? "primary" : "secondary"} onClick={() => setSelectedTool(1)} aria-pressed={selectedTool === 1} aria-label="Rectangle" className="w-fit mb-[8px]"> <span aria-hidden="true" className="block bg-text-primary h-[32px] w-[32px] m-[2px] scale-x-[-1]" style={{ mask: `url("${icon1}") center / contain no-repeat`, WebkitMask: `url("${icon1}") center / contain no-repeat` }} /></Button>
-        <Button disabled={disabled} disableHover type="button" variant={selectedTool === 2 ? "primary" : "secondary"} onClick={() => setSelectedTool(2)} aria-pressed={selectedTool === 2} aria-label="Ellipse" className="w-fit mb-[8px]"> <span aria-hidden="true" className="block bg-text-primary h-[32px] w-[32px] m-[2px] scale-x-[-1]" style={{ mask: `url("${icon2}") center / contain no-repeat`, WebkitMask: `url("${icon2}") center / contain no-repeat` }} /></Button>
-        <Button disabled={disabled} disableHover type="button" variant={selectedTool === 4 ? "primary" : "secondary"} onClick={() => setSelectedTool(4)} aria-pressed={selectedTool === 4} aria-label="Line" className="w-fit mb-[8px]"> <span aria-hidden="true" className="block bg-text-primary h-[32px] w-[32px] m-[2px]" style={{ mask: `url("${icon4}") center / contain no-repeat`, WebkitMask: `url("${icon4}") center / contain no-repeat` }} /></Button>
-
-        <div className="border-t border-border mb-[8px]"> </div>
-
-        <Button disabled={disabled} disableHover type="button" variant="secondary" onClick={onTextClick} aria-label="Text" className="w-fit mb-[8px] active:bg-primary active:border-primary active:text-text-primary"> <span aria-hidden="true" className="block bg-text-primary h-[32px] w-[32px] m-[2px]" style={{ mask: `url("${icon5}") center / contain no-repeat`, WebkitMask: `url("${icon5}") center / contain no-repeat` }} /></Button>
-        <Button disabled={disabled} disableHover type="button" variant="secondary" onClick={onImageClick} aria-label="Image" className="w-fit mb-[8px] active:bg-primary active:border-primary active:text-text-primary"> <span aria-hidden="true" className="block bg-text-primary h-[32px] w-[32px] m-[2px]" style={{ mask: `url("${icon6}") center / contain no-repeat`, WebkitMask: `url("${icon6}") center / contain no-repeat` }} /></Button>
-        <Button disabled={disabled} disableHover type="button" variant="secondary" onClick={onVideoClick} aria-label="Video" className="w-fit mb-[8px] active:bg-primary active:border-primary active:text-text-primary"> <span aria-hidden="true" className="block bg-text-primary h-[32px] w-[32px] m-[2px]" style={{ mask: `url("${icon7}") center / contain no-repeat`, WebkitMask: `url("${icon7}") center / contain no-repeat` }} /></Button>
-        
-        <div className="border-t border-border mb-[8px]"> </div>
-        
-        <Button disabled={disabled || !canDelete} disableHover type="button" variant="delete" onClick={onDeleteClick} aria-label="Delete" className="w-fit "> <span aria-hidden="true" className="block bg-text-primary h-[32px] w-[32px] m-[2px]" style={{ mask: `url("${icon8}") center / contain no-repeat`, WebkitMask: `url("${icon8}") center / contain no-repeat` }} /></Button>
-        
-        </div> 
-
-       
-
-
+    <div className="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex justify-center px-4">
+      <div role="toolbar" aria-label="Workspace tools" className="pointer-events-auto flex max-w-full items-center gap-2 overflow-x-auto rounded-lg border border-border bg-surface p-1.5 shadow-lg">
+        <ToolButton label="Cursor" icon={icon0} flipped selected={selectedTool === 0} disabled={disabled} onClick={() => setSelectedTool(0)} />
+        <ToolButton label="Rectangle" icon={icon1} flipped selected={selectedTool === 1} disabled={disabled} onClick={() => setSelectedTool(1)} />
+        <ToolButton label="Ellipse" icon={icon2} flipped selected={selectedTool === 2} disabled={disabled} onClick={() => setSelectedTool(2)} />
+        <ToolButton label="Line" icon={icon4} selected={selectedTool === 4} disabled={disabled} onClick={() => setSelectedTool(4)} />
+        <div aria-hidden="true" className="mx-1 h-6 shrink-0 border-l border-border" />
+        <ToolButton label="Section" icon={<FiColumns size={24} />} selected={selectedTool === 3} disabled={disabled} onClick={() => setSelectedTool(3)} />
+        <ToolButton label="New card" icon={<TbLayoutBoardSplit size={24} />} disabled={disabled} onClick={onNewCardClick} />
+        <ToolButton label="Upload media" icon={<FiUpload size={24} />} disabled={disabled} onClick={onUploadMediaClick} />
+        <div aria-hidden="true" className="mx-1 h-6 shrink-0 border-l border-border" />
+        <ToolButton label="Delete" icon={icon8} disabled={disabled || !canDelete} onClick={onDeleteClick} />
+      </div>
     </div>
   );
 }

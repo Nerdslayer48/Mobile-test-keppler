@@ -26,12 +26,13 @@ function CategoryIcon({ category }: { category: string }) {
 }
 
 interface NewProjectProps {
-  onCreate?: (project: ProjectInput) => void;
+  onCreate?: (project: ProjectInput) => void | Promise<void>;
   onClose?: () => void;
 }
 
 export function NewProject({ onCreate, onClose }: NewProjectProps) {
   const [saveError, setSaveError] = useState("");
+  const [saving, setSaving] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [nameError, setNameError] = useState(false);
   const [category, setCategory] = useState("");
@@ -202,19 +203,20 @@ export function NewProject({ onCreate, onClose }: NewProjectProps) {
 
 
                 <div className="flex justify-center mt-[32px]">
-                    {onClose && <Button variant="secondary" className="mr-[10px]" onClick={onClose}>Cancel</Button>}
-                    <Button variant="primary" onClick={() => {
+                    {onClose && <Button disabled={saving} variant="secondary" className="mr-[10px]" onClick={onClose}>Cancel</Button>}
+                    <Button disabled={saving} variant="primary" onClick={async () => {
                         setNameError(projectName.trim().length < 4);
                         setCategoryError(categories.length === 0);
                         if (projectName.trim().length < 4 || categories.length === 0) return;
                         setSaveError("");
+                        setSaving(true);
                         try {
-                            onCreate?.({ name: projectName.trim(), categories: [...categories] });
+                            await onCreate?.({ name: projectName.trim(), categories: [...categories] });
                             onClose?.();
                         } catch {
                             setSaveError("Unable to save the project. Please try again.");
-                        }
-                    }}>Create Project</Button>
+                        } finally { setSaving(false); }
+                    }}>{saving ? 'Saving…' : 'Create Project'}</Button>
                 </div>
                 {saveError && <p role="alert" className="mt-[8px] text-[14px] text-error">{saveError}</p>}
 

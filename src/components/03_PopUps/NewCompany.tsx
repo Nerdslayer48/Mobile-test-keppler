@@ -1,9 +1,10 @@
 import { emptyClient } from "../../types/client";
 import type { ClientInput } from "../../types/client";
-import type { ChangeEvent } from "react";
+import type { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import { Button } from "../00_UiComps/Button";
 import { Input } from "../00_UiComps/Input";
+import { ClientPicturePicker } from "../00_UiComps/ClientPicturePicker";
 
 interface NewCompanyProps {
   open?: boolean;
@@ -12,7 +13,7 @@ interface NewCompanyProps {
   initialValues?: ClientInput;
   onDelete?: () => void;
   draft?: ClientInput;
-  onDraftChange?: (client: ClientInput) => void;
+  onDraftChange?: Dispatch<SetStateAction<ClientInput>>;
   editing?: boolean;
   onSelectIndividual?: () => void;
 }
@@ -61,21 +62,25 @@ export function NewCompany({ open, onClose, onSave, onSelectIndividual, initialV
           <Button className="h-[27px]" >Company</Button>
           {editing && <Button className="h-[27px]" variant="delete" onClick={onDelete}>Delete</Button>}
         </div>
-          <div>
+          <div className="flex gap-[38px] mb-[16px]">
+            <div>
                 <h3 className="text-text-primary text-[20px] font-medium font-montserrat">Organization</h3>
                 <div>
                   <h4 className=" text-text-secondary pb-[8px] pt-[16px]">Company Name</h4>
-                  <Input placeholder="Stonks international" className="w-[612px]" {...field("companyName")}/>
+                  <Input placeholder="Stonks international" className="w-[360px]" {...field("companyName")}/>
                 </div>
                 <div>
                   <h4 className=" text-text-secondary pb-[8px] pt-[16px]">Company Address</h4>
-                  <Input placeholder="123 Business Street" className="w-[612px]" {...field("companyAddress")}/>
+                  <Input placeholder="123 Business Street" className="w-[360px]" {...field("companyAddress")}/>
                 </div>
                 <div>
                   <h4 className=" text-text-secondary pb-[8px] pt-[16px]">Hotline</h4>
-                  <Input placeholder="Business Hotline" className="w-[612px]" {...field("hotline")}/>
+                  <Input placeholder="Business Hotline" className="w-[360px]" {...field("hotline")}/>
                 </div>
               </div>
+              <ClientPicturePicker value={draft.profilePicture} clientType="company"
+                onChange={profilePicture => setDraft(current => ({ ...current, profilePicture }))} />
+            </div>
 
             <div className="flex flex-row mb-[16px]">
 

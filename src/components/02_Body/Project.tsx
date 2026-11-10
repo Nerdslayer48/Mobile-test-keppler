@@ -1,3 +1,4 @@
+import { InvoiceModal } from "../03_PopUps/InvoiceModal";
 import plusIcon from "../../icons/plus.png";
 import { currentRoute, navigate } from "../../navigation";
 import { Input } from "../00_UiComps/Input";
@@ -34,9 +35,13 @@ function BackButton({ className = "" }: { className?: string }) {
 export function Project() {
   const clientId = currentRoute().searchParams.get("clientId");
   const [client] = useState(() => loadClients().find((savedClient) => savedClient.id === clientId));
+  const [invoice, setInvoice] = useState<{ projectIds?: string[]; chooseProjects?: boolean } | null>(null);
   const [newProjectOpen, setNewProjectOpen] = useState(false);
   const [projects, setProjects] = useState(() => clientId ? loadProjects(clientId) : []);
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
+  const query = search.trim().toLowerCase();
+  const visibleProjects = projects.filter(project => [project.name, ...project.categories].join(' ').toLowerCase().includes(query));
 
   if (!client) {
     return (
@@ -64,8 +69,8 @@ export function Project() {
             </div>
 
             <div>
-                <Input></Input>
-                <Button className=" flex ml-[25px]">+ New Invoice</Button>
+                <Input type="search" placeholder="Search projects" aria-label="Search projects" value={search} onChange={event => setSearch(event.target.value)} />
+                <Button className=" flex ml-[25px]" onClick={() => setInvoice({ chooseProjects: true })}>+ New Invoice</Button>
             </div>
         </div>
 
@@ -80,7 +85,7 @@ export function Project() {
         <div className="bg-surface min-w-[1340px] h-screen border-1 border-b-0 border-border rounded-tl-[16px] rounded-tr-[16px] pt-[40px] px-[24px] ">
             <div className="grid grid-cols-4 justify-items-center gap-y-[46px]">
             
-            <button type="button" onClick={() => setNewProjectOpen(true)} className="bg-accent w-[255px] h-[180px] rounded-[16px] p-[10px] text-left cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+            <button type="button" aria-label="Create project" onClick={() => setNewProjectOpen(true)} className="bg-accent w-[255px] h-[180px] rounded-[16px] p-[10px] text-left cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
                 <span className="block font-inder text-black/50 text-[12px] mb-[5px]">New Project</span>
                 
                 <span className="h-[140px] w-full bg-text-primary rounded-[6px] flex flex-col items-center justify-center">
@@ -92,7 +97,7 @@ export function Project() {
             </button>
             
 
-                {projects.map((project) => (
+                {visibleProjects.map((project) => (
                     <ProjectTabs
                         key={project.id}
                         title={project.name}
@@ -115,13 +120,15 @@ export function Project() {
                 
 
             </div>
+            {query && !visibleProjects.length && <p role="status" className="mt-6 text-text-muted">No matching projects.</p>}
         </div>
 
+        {invoice && <InvoiceModal client={client} {...invoice} onClose={() => setInvoice(null)} />}
         {newProjectOpen && (
             <NewProject
                 onClose={() => setNewProjectOpen(false)}
-                onCreate={(input) => {
-                    const saved = saveProject({ ...input, id: crypto.randomUUID(), clientId: client.id });
+                onCreate={async (input) => {
+                    const saved = await saveProject({ ...input, id: crypto.randomUUID(), clientId: client.id });
                     setProjects(saved);
                 }}
             />

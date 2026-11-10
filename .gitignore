@@ -12,6 +12,11 @@ dist
 dist-ssr
 release
 *.local
+.env
+.env.*
+!.env.example
+.data/
+build/desktop-app/
 
 # Editor directories and files
 .vscode/*
@@ -23,3 +28,12 @@ release
 *.njsproj
 *.sln
 *.sw?
+.neon
+
+# Invoice export test artifacts
+build/invoice-*.png
+build/invoice-*.pdf
+
+build/*-settings-preview.png
+
+build/staff-access-preview.png

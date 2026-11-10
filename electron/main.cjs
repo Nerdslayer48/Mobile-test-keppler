@@ -11,9 +11,12 @@ async function createWindow() {
     minWidth: 900,
     minHeight: 600,
     title: 'Keppler',
+    icon: path.join(__dirname, '../dist/Logomark with rounded bg.png'),
     backgroundColor: '#2c2c2c',
     show: false,
     autoHideMenuBar: true,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: { color: '#2c2c2c', symbolColor: '#f5f5f5', height: 48 },
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -30,6 +33,9 @@ async function createWindow() {
     }
   });
   window.on('ready-to-show', () => window.show());
+  window.webContents.on('did-finish-load', () => {
+    void window.webContents.insertCSS('body::before { content: "Keppler"; display: block; height: 48px; padding-left: 16px; line-height: 48px; color: #d6d6d6; font: 600 14px/48px sans-serif; -webkit-app-region: drag; }');
+  });
 
   const devUrl = !app.isPackaged && process.env.KEPPLER_DEV_URL;
   if (devUrl) {

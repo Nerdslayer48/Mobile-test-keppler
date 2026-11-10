@@ -2,17 +2,20 @@ import { navigate } from "../../navigation";
 
 import { Button } from "../00_UiComps/Button";
 import { format } from "date-fns";
+import { FiBriefcase, FiUser } from "react-icons/fi";
+import type { ClientInput } from "../../types/client";
 
 
 
-export function Clientbox ({ clientName = "", email = "", companyName = "", clientId, onEdit }: { clientId?: string; clientName?: string; email?: string; companyName?: string; onEdit?: () => void }) {
+export function Clientbox ({ clientName = "", email = "", companyName = "", clientType = "individual", profilePicture, clientId, onEdit, onInvoice }: { clientId?: string; clientName?: string; email?: string; companyName?: string; clientType?: ClientInput["clientType"]; profilePicture?: string; onInvoice?: () => void; onEdit?: () => void }) {
+    const DefaultIcon = clientType === "company" ? FiBriefcase : FiUser;
     const openProjects = () => {
         if (clientId) navigate(`/project?clientId=${encodeURIComponent(clientId)}`);
     };
     const displayCompanyName = companyName.trim();
     return(
         <div
-            className={`flex w-full py-5 hover:bg-border hover:rounded-[20px] ${clientId ? "cursor-pointer" : ""}`}
+            className={`flex w-full py-5 pl-[30px] pr-[110px] hover:bg-border ${clientId ? "cursor-pointer" : ""}`}
             role={clientId ? "link" : undefined}
             tabIndex={clientId ? 0 : undefined}
             aria-label={clientId ? `Open projects for ${clientName}` : undefined}
@@ -26,7 +29,11 @@ export function Clientbox ({ clientName = "", email = "", companyName = "", clie
                 <div className="flex flex-row ml-[10px]">
 
                     {/* display picture  */}
-                    <div className="border-[24px] rounded-[48px] border-accent" />
+                    <div className="flex h-[48px] w-[48px] shrink-0 items-center justify-center overflow-hidden rounded-full border border-button-border bg-button-bg text-button-text">
+                        {profilePicture
+                            ? <img src={profilePicture} alt={`${clientName || "Client"} profile`} className="h-full w-full object-cover" />
+                            : <DefaultIcon size={24} aria-hidden="true" />}
+                    </div>
 
                     {/* name of client and category */}
 
@@ -48,7 +55,7 @@ export function Clientbox ({ clientName = "", email = "", companyName = "", clie
                     {format(new Date(), "MMM d, yyyy")}
                 </div>
                 <div className="flex w-[300px] shrink-0 flex-row items-start" onClick={(event) => event.stopPropagation()}>
-                    <Button variant="primary" className="mr-[10px]"> Invoice</Button>
+                    <Button variant="primary" className="mr-[10px]" onClick={onInvoice}> Invoice</Button>
                     <Button variant="secondary" onClick={onEdit}>
                         Edit
                     </Button>

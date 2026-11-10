@@ -1,6 +1,9 @@
 import { spawn } from 'node:child_process';
 import { createServer } from 'vite';
 import electron from 'electron';
+import { startApi } from './api-process.mjs';
+
+const api = await startApi();
 
 const server = await createServer({
   server: { host: '127.0.0.1', port: 5173, strictPort: true },
@@ -16,6 +19,7 @@ async function close(code = 0) {
   if (closing) return;
   closing = true;
   child.kill();
+  api?.kill();
   await server.close();
   process.exit(code);
 }

@@ -1,5 +1,4 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inder&family=Montserrat:wght@400;500;600;700&display=swap');
 
 
 @import "tailwindcss";
@@ -117,4 +116,15 @@ body {
 @theme {
   --font-montserrat: "Montserrat", sans-serif;
   --font-inder: "Inder", sans-serif;
+}
+
+/* Hide scrollbar tracks while preserving wheel, touch, and keyboard scrolling. */
+* { scrollbar-width: none; }
+*::-webkit-scrollbar { display: none; }
+input, textarea, select,
+input:focus, textarea:focus, select:focus,
+input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: none !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
 }
